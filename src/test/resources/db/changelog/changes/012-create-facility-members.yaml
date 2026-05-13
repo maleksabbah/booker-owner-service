@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-create-facility-members
+      author: malek
+      changes:
+        - createTable:
+            tableName: facility_members
+            columns:
+              - column:
+                  name: facility_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_facility_members_facility
+                    references: facilities(id)
+                    deleteCascade: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_facility_members_user
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: role
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: added_by_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_facility_members_added_by
+                    references: users(id)
+              - column:
+                  name: added_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: facility_members
+            columnNames: facility_id, user_id
+            constraintName: pk_facility_members
+
+        - sql:
+            sql: ALTER TABLE facility_members ADD CONSTRAINT chk_facility_member_role CHECK (role IN ('OWNER', 'MANAGER', 'STAFF'))
+
+        - createIndex:
+            tableName: facility_members
+            indexName: idx_facility_members_user
+            columns:
+              - column:
+                  name: user_id

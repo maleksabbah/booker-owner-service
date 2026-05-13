@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-refresh-tokens
+      author: malek
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_refresh_tokens_user
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: token_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revoked_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: device_info
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_used_at
+                  type: TIMESTAMP
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_user_id
+            columns:
+              - column:
+                  name: user_id

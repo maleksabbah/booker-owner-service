@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-courts
+      author: malek
+      changes:
+        - createTable:
+            tableName: courts
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_courts_facility
+                    references: facilities(id)
+                    deleteCascade: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sport
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: surface
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacity
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price_per_hour
+                  type: DECIMAL(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: VARCHAR(3)
+                  defaultValue: USD
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: courts
+            indexName: idx_courts_facility
+            columns:
+              - column:
+                  name: facility_id

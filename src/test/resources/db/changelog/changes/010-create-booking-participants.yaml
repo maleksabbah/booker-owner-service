@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-booking-participants
+      author: malek
+      changes:
+        - createTable:
+            tableName: booking_participants
+            columns:
+              - column:
+                  name: booking_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_participants_booking
+                    references: bookings(id)
+                    deleteCascade: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_participants_user
+                    references: users(id)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: share_amount
+                  type: DECIMAL(10, 2)
+              - column:
+                  name: joined_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: left_at
+                  type: TIMESTAMP
+        - addPrimaryKey:
+            tableName: booking_participants
+            columnNames: booking_id, user_id
+            constraintName: pk_booking_participants
+        - createIndex:
+            tableName: booking_participants
+            indexName: idx_booking_participants_user
+            columns:
+              - column:
+                  name: user_id

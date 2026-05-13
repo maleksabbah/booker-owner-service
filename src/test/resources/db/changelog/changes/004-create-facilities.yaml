@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-facilities
+      author: malek
+      changes:
+        - createTable:
+            tableName: facilities
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: owner_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_facilities_owner
+                    references: users(id)
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: address
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latitude
+                  type: DECIMAL(9, 6)
+              - column:
+                  name: longitude
+                  type: DECIMAL(9, 6)
+              - column:
+                  name: phone
+                  type: VARCHAR(50)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: website
+                  type: VARCHAR(255)
+              - column:
+                  name: opens_at
+                  type: TIME
+              - column:
+                  name: closes_at
+                  type: TIME
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: facilities
+            indexName: idx_facilities_owner
+            columns:
+              - column:
+                  name: owner_user_id
+        - createIndex:
+            tableName: facilities
+            indexName: idx_facilities_city
+            columns:
+              - column:
+                  name: city

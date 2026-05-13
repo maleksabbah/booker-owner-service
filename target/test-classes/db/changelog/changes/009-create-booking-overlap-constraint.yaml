@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-create-booking-overlap-constraint
+      author: malek
+      changes:
+        - sql:
+            sql: |
+              CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+              ALTER TABLE bookings
+              ADD CONSTRAINT no_court_overlap
+              EXCLUDE USING GIST (
+                court_id WITH =,
+                tsrange(slot_start, slot_end) WITH &&
+              )
+              WHERE (state IN ('HELD', 'CONFIRMED', 'SEATED'));

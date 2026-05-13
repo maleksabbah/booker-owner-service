@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-create-facility-invitations
+      author: malek
+      changes:
+        - createTable:
+            tableName: facility_invitations
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_facility_invitations_facility
+                    references: facilities(id)
+                    deleteCascade: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uq_facility_invitations_token
+              - column:
+                  name: invited_by_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_facility_invitations_invited_by
+                    references: users(id)
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: accepted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: revoked_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+        - sql:
+            sql: ALTER TABLE facility_invitations ADD CONSTRAINT chk_facility_invitation_role CHECK (role IN ('OWNER', 'MANAGER', 'STAFF'))
+
+        - createIndex:
+            tableName: facility_invitations
+            indexName: idx_facility_invitations_facility
+            columns:
+              - column:
+                  name: facility_id
+
+        - createIndex:
+            tableName: facility_invitations
+            indexName: idx_facility_invitations_email
+            columns:
+              - column:
+                  name: email

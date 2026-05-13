@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-court-availability
+      author: malek
+      changes:
+        - createTable:
+            tableName: court_availability
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: court_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_court_availability_court
+                    references: courts(id)
+                    deleteCascade: true
+              - column:
+                  name: day_of_week
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: opens_at
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: closes_at
+                  type: TIME
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: court_availability
+            indexName: idx_court_availability_court
+            columns:
+              - column:
+                  name: court_id

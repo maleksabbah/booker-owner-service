@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-create-idempotency-records
+      author: malek
+      changes:
+        - createTable:
+            tableName: idempotency_records
+            columns:
+              - column:
+                  name: key
+                  type: VARCHAR(100)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_idempotency_user
+                    references: users(id)
+              - column:
+                  name: endpoint
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: request_hash
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: response_status
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: response_body
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: idempotency_records
+            indexName: idx_idempotency_expires_at
+            columns:
+              - column:
+                  name: expires_at

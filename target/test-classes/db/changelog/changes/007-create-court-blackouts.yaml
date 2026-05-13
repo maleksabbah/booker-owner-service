@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-court-blackouts
+      author: malek
+      changes:
+        - createTable:
+            tableName: court_blackouts
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: court_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_court_blackouts_court
+                    references: courts(id)
+                    deleteCascade: true
+              - column:
+                  name: starts_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ends_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: court_blackouts
+            indexName: idx_court_blackouts_court_range
+            columns:
+              - column:
+                  name: court_id
+              - column:
+                  name: starts_at
+              - column:
+                  name: ends_at

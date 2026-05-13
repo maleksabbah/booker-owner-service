@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-add-booking-audit-columns
+      author: malek
+      changes:
+        - addColumn:
+            tableName: bookings
+            columns:
+              - column:
+                  name: seated_by_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_bookings_seated_by
+                    references: users(id)
+              - column:
+                  name: completed_by_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_bookings_completed_by
+                    references: users(id)
+              - column:
+                  name: no_show_by_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_bookings_no_show_by
+                    references: users(id)

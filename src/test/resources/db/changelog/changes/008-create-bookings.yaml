@@ -1,0 +1,116 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-bookings
+      author: malek
+      changes:
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: court_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bookings_court
+                    references: courts(id)
+              - column:
+                  name: creator_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bookings_creator
+                    references: users(id)
+              - column:
+                  name: slot_start
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slot_end
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: visibility
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slots_total
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slots_filled
+                  type: INT
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: min_players
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: price_total
+                  type: DECIMAL(10, 2)
+              - column:
+                  name: hold_expires_at
+                  type: TIMESTAMP
+              - column:
+                  name: idempotency_key
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_court
+            columns:
+              - column:
+                  name: court_id
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_creator
+            columns:
+              - column:
+                  name: creator_user_id
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_visibility_state
+            columns:
+              - column:
+                  name: visibility
+              - column:
+                  name: state
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_hold_expires
+            columns:
+              - column:
+                  name: hold_expires_at
